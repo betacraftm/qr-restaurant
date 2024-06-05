@@ -1,13 +1,44 @@
 const express = require('express')
-const dotenv = require('dotenv')
 const app = express()
-
+const dotenv = require('dotenv')
+const { logger } = require('./middleware/logEvent.middleware')
+const credentials = require('./middleware/credentials.middleware')
+const cors = require('cors')
+const corsOptions = require('./config/corsOptions.config')
+const cookieParser = require('cookie-parser')
+const errorHandler = require('./middleware/errorHandler.middleware')
+const connectDB = require('./config/db.config')
+const mongoose = require('mongoose')
+const PORT = process.env.PORT || 1010
 dotenv.config()
 
-const PORT = process.env.PORT || 1010
+//Connect to database
+connectDB()
 
-app.get('/', (req, res) => {
-	res.send('Hello World')
+// Log event
+app.use(logger)
+
+// Handle options credentials check - before CORS!
+// and fetch cookies credentials requirement
+app.use(credentials)
+
+// Cross Origin Resource Sharing
+app.use(cors(corsOptions))
+
+// built-in middleware to handle urlencoded form data
+app.use(express.urlencoded({ extended: false }))
+
+// built-in middleware for json
+app.use(express.json())
+
+//middleware for cookies
+app.use(cookieParser())
+
+//routes
+
+app.use(errorHandler)
+
+mongoose.connection.once('open', () => {
+	console.log('Connected to DB')
+	app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
 })
-
-app.listen(8904, () => console.log(`Server is running on port ${PORT}`))
