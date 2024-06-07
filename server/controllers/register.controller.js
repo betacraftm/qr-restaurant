@@ -64,9 +64,11 @@ const handleNewUser = async (req, res) => {
 		res
 			.status(StatusCodes.CREATED)
 			.json({ success: `User ${fullName} created` })
-	} catch (err) {
-		console.log(`Error in register routes: ${err.message}`)
-		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: err.message })
+	} catch (error) {
+		console.log(`Error in register routes: ${error.message}`)
+		res
+			.status(StatusCodes.INTERNAL_SERVER_ERROR)
+			.json({ message: error.message })
 	}
 }
 
