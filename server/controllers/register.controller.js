@@ -11,61 +11,47 @@ const handleNewUser = async (req, res) => {
 		const passwordReg =
 			/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,64}$/g
 
-		if (!fullName || !userName || !email || !password || !confirmPwd) {
-			res
+		if (!fullName || !userName || !email || !password || !confirmPwd)
+			return res
 				.status(StatusCodes.BAD_REQUEST)
 				.json({ message: 'Vui lòng điền hết vào tất cả các ô' })
-			return
-		}
 
-		if (!fullNameReg.test(fullName)) {
-			res.status(StatusCodes.BAD_REQUEST).json({ message: 'Tên không hợp lệ' })
-			return
-		}
+		if (!fullNameReg.test(fullName))
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ message: 'Tên không hợp lệ' })
 
-		if (!userNameReg.test(userName)) {
-			res
+		if (!userNameReg.test(userName))
+			return res
 				.status(StatusCodes.BAD_REQUEST)
 				.json({ message: 'Tên đăng nhập không hợp lệ' })
-			return
-		}
 
-		if (!emailReg.test(email)) {
-			res
+		if (!emailReg.test(email))
+			return res
 				.status(StatusCodes.BAD_REQUEST)
 				.json({ message: 'Email không hợp lệ' })
-			return
-		}
 
-		if (!passwordReg.test(password)) {
-			res
+		if (!passwordReg.test(password))
+			return res
 				.status(StatusCodes.BAD_REQUEST)
 				.json({ message: 'Mật khẩu không hợp lệ' })
-			return
-		}
 
-		if (password !== confirmPwd) {
-			res
+		if (password !== confirmPwd)
+			return res
 				.status(StatusCodes.BAD_REQUEST)
 				.json({ message: 'Xác nhận mật khẩu sai' })
-			return
-		}
 
 		const duplicateUserName = await User.findOne({ userName })
-		if (duplicateUserName) {
-			res
+		if (duplicateUserName)
+			return res
 				.status(StatusCodes.CONFLICT)
 				.json({ message: 'Tên đăng nhập đã tồn tại' })
-			return
-		}
 
 		const duplicateEmail = await User.findOne({ email })
-		if (duplicateEmail) {
-			res
+		if (duplicateEmail)
+			return res
 				.status(StatusCodes.CONFLICT)
 				.json({ message: 'Email đã được sử dụng' })
-			return
-		}
 
 		const hashedPwd = await bcrypt.hash(password, 10)
 		const newUser = User.create({
