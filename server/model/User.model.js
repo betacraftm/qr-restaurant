@@ -22,6 +22,13 @@ const userSchema = new mongoose.Schema({
 		required: true,
 		unique: true,
 	},
+	restaurants: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Restaurant',
+			default: [],
+		},
+	],
 	refreshToken: String,
 })
 

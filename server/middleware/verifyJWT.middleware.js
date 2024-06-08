@@ -10,6 +10,7 @@ const verifyJWT = (req, res, next) => {
 		if (err) return res.sendStatus(StatusCodes.FORBIDDEN)
 		req.body.userName = decoded.UserInfo.userName
 		req.body.email = decoded.UserInfo.email
+		req.body._id = decoded.UserInfo._id
 		next()
 	})
 }
