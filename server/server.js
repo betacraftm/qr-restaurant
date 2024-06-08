@@ -38,6 +38,7 @@ app.use(cookieParser())
 app.use('/register', require('./routes/register.route'))
 app.use('/login', require('./routes/login.route'))
 app.use('/logout', require('./routes/logout.route'))
+app.use('/refresh', require('./routes/refresh.route'))
 
 app.use(errorHandler)
 
