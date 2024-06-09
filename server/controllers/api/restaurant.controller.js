@@ -44,8 +44,8 @@ const createRestaurant = async (req, res) => {
 			numTable,
 			description,
 		})
-		const oldRestaurant = foundUser.restaurants
-		foundUser.restaurants = [...oldRestaurant, result._id]
+		const restaurants = foundUser.restaurants
+		foundUser.restaurants = [...restaurants, result._id]
 		await foundUser.save()
 		res
 			.status(StatusCodes.CREATED)
