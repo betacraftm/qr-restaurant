@@ -60,6 +60,27 @@ const createDish = async (req, res) => {
 			.json({ message: error.message })
 	}
 }
-const editDish = async (req, res) => {}
+const editDish = async (req, res) => {
+	try {
+		const { dish } = req.query
+		const foundDish = await Dish.findById(dish)
+		if (!foundDish)
+			return res
+				.status(StatusCodes.NO_CONTENT)
+				.json({ message: 'No dish matched ID' })
+		if (req.body?.name) foundDish.name = req.body.name
+		if (req.body?.price) foundDish.address = req.body.price
+		if (req.body?.category) foundDish.numTable = req.body.category
+		if (req.body?.description) foundDish.description = req.body.description
+		const result = await foundDish.save()
+		console.log(result)
+		res.status(StatusCodes.OK).json(result)
+	} catch (error) {
+		console.log(`Error in edit dishes: ${error.message}`)
+		res
+			.status(StatusCodes.INTERNAL_SERVER_ERROR)
+			.json({ message: error.message })
+	}
+}
 
 module.exports = { getAllDishes, createDish, editDish }

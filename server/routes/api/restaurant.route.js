@@ -6,5 +6,6 @@ router
 	.route('/:id')
 	.get(dishController.getAllDishes)
 	.post(dishController.createDish)
+	.put(dishController.editDish)
 
 module.exports = router
