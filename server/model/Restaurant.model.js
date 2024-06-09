@@ -3,12 +3,12 @@ const mongoose = require('mongoose')
 const restaurantSchema = new mongoose.Schema({
 	name: {
 		type: String,
-		minLength: 5,
+		minlength: 5,
 		required: true,
 	},
 	address: {
 		type: String,
-		minLength: 5,
+		minlength: 5,
 		required: true,
 	},
 	numTable: {

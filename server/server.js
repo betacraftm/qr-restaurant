@@ -42,6 +42,7 @@ app.use('/logout', require('./routes/logout.route'))
 app.use('/refresh', require('./routes/refresh.route'))
 app.use(verifyJWT)
 app.use('/home', require('./routes/api/home.route'))
+app.use('/restaurant', require('./routes/api/restaurant.route'))
 
 app.use(errorHandler)
 
