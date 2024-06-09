@@ -68,7 +68,7 @@ const editRestaurant = async (req, res) => {
 		if (!restaurant)
 			return res
 				.status(StatusCodes.NO_CONTENT)
-				.json({ message: 'No employee matched ID' })
+				.json({ message: 'No restaurant matched ID' })
 		if (req.body?.name) restaurant.name = req.body.name
 		if (req.body?.address) restaurant.address = req.body.address
 		if (req.body?.numTable) restaurant.numTable = req.body.numTable
