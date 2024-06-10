@@ -83,4 +83,17 @@ const editDish = async (req, res) => {
 	}
 }
 
-module.exports = { getAllDishes, createDish, editDish }
+const deleteDish = async (req, res) => {
+	try {
+		const { dish } = req.query
+		await Dish.findByIdAndDelete(dish)
+		res.status(StatusCodes.OK).json({ message: 'Deleted' })
+	} catch (error) {
+		console.log(`Error in delete dishes: ${error.message}`)
+		res
+			.status(StatusCodes.INTERNAL_SERVER_ERROR)
+			.json({ message: error.message })
+	}
+}
+
+module.exports = { getAllDishes, createDish, editDish, deleteDish }
