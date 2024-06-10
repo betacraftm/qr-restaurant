@@ -42,6 +42,22 @@ const getOrder = async (req, res) => {
 			dishes,
 			totalPrice,
 		})
+
+		if (!req?.params?.id)
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ message: 'Id are required' })
+		const restaurant = await Restaurant.findById(req.params.id).populate(
+			'dishes'
+		)
+		if (!restaurant)
+			return res
+				.status(StatusCodes.NO_CONTENT)
+				.json({ message: 'No restaurant matched ID' })
+
+		const oldOrder = restaurant.orders
+		restaurant.orders = [...oldOrder, result._id]
+		await restaurant.save()
 		res
 			.status(StatusCodes.CREATED)
 			.json({ message: `Order ${result._id} created` })
