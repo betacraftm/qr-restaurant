@@ -7,5 +7,6 @@ router
 	.get(dishController.getAllDishes)
 	.post(dishController.createDish)
 	.put(dishController.editDish)
+	.delete(dishController.deleteDish)
 
 module.exports = router
