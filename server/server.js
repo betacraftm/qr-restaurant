@@ -40,8 +40,10 @@ app.use('/register', require('./routes/register.route'))
 app.use('/login', require('./routes/login.route'))
 app.use('/logout', require('./routes/logout.route'))
 app.use('/refresh', require('./routes/refresh.route'))
+app.use('/menu', require('./routes/api/menu.route'))
 app.use(verifyJWT)
 app.use('/home', require('./routes/api/home.route'))
+app.use('/restaurant', require('./routes/api/restaurant.route'))
 
 app.use(errorHandler)
 
