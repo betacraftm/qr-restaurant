@@ -4,6 +4,11 @@ const Bill = require('../../model/Bill.model')
 
 const getMenu = async (req, res) => {
 	try {
+		const { table } = req.query
+		if (table <= 0)
+			res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ message: 'Table number must be positive' })
 		if (!req?.params?.id)
 			return res
 				.status(StatusCodes.BAD_REQUEST)
@@ -16,7 +21,9 @@ const getMenu = async (req, res) => {
 				.status(StatusCodes.NO_CONTENT)
 				.json({ message: 'No restaurant matched ID' })
 
-		res.status(StatusCodes.OK).json(restaurant.dishes)
+		res
+			.status(StatusCodes.OK)
+			.json({ name: restaurant.name, table, dishes: restaurant.dishes })
 	} catch (error) {
 		console.log(`Error in get menu: ${error.message}`)
 		res
