@@ -1,9 +1,10 @@
-import ThemeController from "./utils/ThemeController";
+import LandingPage from "./pages/LandingPage";
+import { Routes, Route } from "react-router-dom";
 const App = () => {
   return (
-    <>
-      <ThemeController />
-    </>
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+    </Routes>
   );
 };
 
