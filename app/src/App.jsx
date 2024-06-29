@@ -1,5 +1,10 @@
+import ThemeController from "./utils/ThemeController";
 const App = () => {
-  return <div>App</div>;
+  return (
+    <>
+      <ThemeController />
+    </>
+  );
 };
 
 export default App;
