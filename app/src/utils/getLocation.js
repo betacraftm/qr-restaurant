@@ -9,7 +9,7 @@ function getUserPosition() {
           });
         },
         (error) => {
-          reject(error);
+          reject(new Error(`${error.message}`));
         },
       );
     } else {
