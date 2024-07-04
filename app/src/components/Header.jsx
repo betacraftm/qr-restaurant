@@ -11,9 +11,19 @@ const Header = () => {
         <Link to="/" className="text-3xl font-bold tracking-tight">
           Logo.com
         </Link>
-        <div className="flex items-center justify-center gap-3">
+        <div className="flex items-center justify-center gap-4 min-[426px]:gap-2">
           <ThemeController />
-          <button className="btn" onClick={() => navigate("/login")}>
+          <button onClick={() => navigate("/login")}>
+            <FontAwesomeIcon
+              icon={faRightToBracket}
+              className="text-xl min-[426px]:hidden"
+            />
+          </button>
+
+          <button
+            className="btn hidden min-[426px]:inline-flex"
+            onClick={() => navigate("/login")}
+          >
             Đăng Nhập
             <FontAwesomeIcon icon={faRightToBracket} className="text-xl" />
           </button>
