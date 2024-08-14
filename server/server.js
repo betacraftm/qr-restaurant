@@ -13,38 +13,18 @@ const mongoose = require('mongoose')
 const PORT = process.env.PORT || 1010
 dotenv.config()
 
-//Connect to database
 connectDB()
-
-// Log event
 app.use(logger)
-
-// Handle options credentials check - before CORS!
-// and fetch cookies credentials requirement
 app.use(credentials)
-
-// Cross Origin Resource Sharing
 app.use(cors(corsOptions))
-
-// built-in middleware to handle urlencoded form data
 app.use(express.urlencoded({ extended: false }))
-
-// built-in middleware for json
 app.use(express.json())
-
-//middleware for cookies
 app.use(cookieParser())
-
-//routes
-app.use('/register', require('./routes/register.route'))
-app.use('/login', require('./routes/login.route'))
-app.use('/logout', require('./routes/logout.route'))
-app.use('/refresh', require('./routes/refresh.route'))
-app.use('/menu', require('./routes/api/menu.route'))
+app.use('/api/auth', require('./routes/auth.route'))
+app.use('api/menu', require('./routes/api/menu.route'))
 app.use(verifyJWT)
-app.use('/home', require('./routes/api/home.route'))
-app.use('/restaurant', require('./routes/api/restaurant.route'))
-
+app.use('api/home', require('./routes/api/home.route'))
+app.use('api/restaurant', require('./routes/api/restaurant.route'))
 app.use(errorHandler)
 
 mongoose.connection.once('open', () => {
