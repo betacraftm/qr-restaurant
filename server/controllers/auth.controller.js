@@ -1,6 +1,7 @@
 const User = require('../model/User.model')
 const bcrypt = require('bcryptjs')
 const { StatusCodes } = require('http-status-codes')
+const jwt = require('jsonwebtoken')
 
 const handleNewUser = async (req, res) => {
 	try {
@@ -71,20 +72,20 @@ const handleNewUser = async (req, res) => {
 
 const handleLogin = async (req, res) => {
 	try {
-		const { user, password } = req.body
-		if (!user || !password)
+		const { userNameOrEmail, password } = req.body
+		if (!userNameOrEmail || !password)
 			return res
 				.status(StatusCodes.BAD_REQUEST)
-				.json({ message: 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu' })
+				.json({ message: 'Please fill out username and password' })
 
 		const foundUser = await User.findOne({
-			$or: [{ userName: user }, { email: user }],
+			$or: [{ userName: userNameOrEmail }, { email: userNameOrEmail }],
 		})
 
 		if (!foundUser)
 			return res
 				.status(StatusCodes.UNAUTHORIZED)
-				.json({ message: 'Tên đăng nhập hoặc email không tồn tại' })
+				.json({ message: 'Invalid email or username' })
 
 		const match = await bcrypt.compare(password, foundUser.password)
 
@@ -116,7 +117,6 @@ const handleLogin = async (req, res) => {
 			foundUser.refreshToken = refreshToken
 			const result = await foundUser.save()
 			console.log(result)
-
 			res.cookie('jwt', refreshToken, {
 				httpOnly: true,
 				sameSite: 'None',
