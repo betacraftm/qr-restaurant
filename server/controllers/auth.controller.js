@@ -139,20 +139,20 @@ const handleLogout = async (req, res) => {
 	try {
 		const cookies = req.cookies
 		if (!cookies?.jwt) {
-			return res.status(StatusCodes.NO_CONTENT).json({})
+			return res.status(StatusCodes.OK).json({})
 		}
 		const refreshToken = cookies?.jwt
 		const foundUser = await User.findOne({ refreshToken })
 
 		if (!foundUser) {
 			res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true })
-			return res.status(StatusCodes.NO_CONTENT)
+			return res.status(StatusCodes.OK)
 		}
 
 		foundUser.refreshToken = ''
 		await foundUser.save()
 		res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true })
-		res.status(StatusCodes.NO_CONTENT).json({})
+		res.status(StatusCodes.OK).json({})
 	} catch (error) {
 		console.log(`Error in logout route: ${error.message}`)
 		res
@@ -168,7 +168,6 @@ const handleRefresh = async (req, res) => {
 		const refreshToken = cookies.jwt
 		const foundUser = await User.findOne({ refreshToken })
 		if (!foundUser) return res.status(StatusCodes.FORBIDDEN).json({})
-		console.log('test')
 
 		jwt.verify(
 			refreshToken,
@@ -191,7 +190,6 @@ const handleRefresh = async (req, res) => {
 					process.env.ACCESS_TOKEN_SECRET,
 					{ expiresIn: '6h' }
 				)
-
 				res.json({ accessToken })
 			}
 		)
