@@ -2,18 +2,21 @@ const { StatusCodes } = require('http-status-codes')
 const User = require('../../model/User.model')
 const Restaurant = require('../../model/Restaurant.model')
 
+const vietnamCharacter =
+	'ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ'
+
 const getAllRestaurant = async (req, res) => {
 	try {
-		const userId = req.body?._id
+		const userId = req.params?.userId
 		if (!userId)
 			return res
 				.status(StatusCodes.FORBIDDEN)
-				.json({ message: 'Vui lòng cung cấp ID' })
+				.json({ message: 'Please provide ID' })
 		const foundUser = await User.findById(userId).populate('restaurants')
 		if (!foundUser)
 			return res
 				.status(StatusCodes.FORBIDDEN)
-				.json({ message: 'User không tồn tại' })
+				.json({ message: 'User does not exsist' })
 		const restaurants = foundUser.restaurants
 		res.status(StatusCodes.OK).json(restaurants)
 	} catch (error) {
@@ -26,30 +29,78 @@ const getAllRestaurant = async (req, res) => {
 
 const createRestaurant = async (req, res) => {
 	try {
-		const userId = req.body?._id
+		const userId = req.params?.userId
 		if (!userId)
 			return res
 				.status(StatusCodes.FORBIDDEN)
-				.json({ message: 'Vui lòng cung cấp ID' })
+				.json({ message: 'Please provide ID' })
 		const foundUser = await User.findById(userId)
 		if (!foundUser)
 			return res
 				.status(StatusCodes.FORBIDDEN)
-				.json({ message: 'User không tồn tại' })
-		const { name, address, numTable, description } = req.body
+				.json({ message: 'User does not exsist' })
 		// REGEX here
+		const { name, address, district, ward, numTable, description } = req.body
+		const nameReg = new RegExp(`^[A-Za-z${vietnamCharacter}\\s\\-]{5,}$`, 'g')
+		const addressReg = new RegExp(
+			`^[0-9]{1,5}[A-Za-z${vietnamCharacter}\\s.,#\\-]{5,}$`,
+			'g'
+		)
+		const districtReg = new RegExp(
+			`^[A-Za-z${vietnamCharacter}0-9\\s\\-]+$`,
+			'g'
+		)
+		const wardReg = new RegExp(`^[A-Za-z${vietnamCharacter}0-9\\s\\-]+$`, 'g')
+		const numTableReg = new RegExp(`^\\d+$`, 'g')
+
+		if (!name || !address || !numTable || !district || !ward) {
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ message: 'Please fill out all the field' })
+		}
+
+		if (!nameReg.test(name)) {
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ message: 'Invalid restaurant name' })
+		}
+
+		if (!addressReg.test(address)) {
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ message: 'Invalid address' })
+		}
+
+		if (!numTableReg.test(numTable)) {
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ message: 'Invalid number of table' })
+		}
+
+		if (!districtReg.test(district)) {
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ message: 'Invalid district' })
+		}
+
+		if (!wardReg.test(ward)) {
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ message: 'Invalid ward' })
+		}
+
 		const result = await Restaurant.create({
 			name,
 			address,
+			ward,
+			district,
 			numTable,
 			description,
 		})
 		const restaurants = foundUser.restaurants
 		foundUser.restaurants = [...restaurants, result._id]
 		await foundUser.save()
-		res
-			.status(StatusCodes.CREATED)
-			.json({ message: `New restaurant ${name} created` })
+		res.status(StatusCodes.CREATED).json(result)
 	} catch (error) {
 		console.log(`Error in create restaurant: ${error.message}`)
 		res

@@ -11,6 +11,14 @@ const restaurantSchema = new mongoose.Schema({
 		minlength: 5,
 		required: true,
 	},
+	district: {
+		type: String,
+		required: true,
+	},
+	ward: {
+		type: String,
+		required: true,
+	},
 	numTable: {
 		type: Number,
 		min: 0,

@@ -4,12 +4,12 @@ const restaurantController = require('../../controllers/api/restaurant.controlle
 const userController = require('../../controllers/api/user.controller')
 
 router
-	.route('/')
+	.route('/:userId')
 	.get(restaurantController.getAllRestaurant)
 	.post(restaurantController.createRestaurant)
 
 router
-	.route('/:id')
+	.route('/:restaurantId')
 	.put(restaurantController.editRestaurant)
 	.delete(restaurantController.deleteRestaurant)
 

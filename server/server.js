@@ -23,8 +23,8 @@ app.use(cookieParser())
 app.use('/api/auth', require('./routes/auth.route'))
 app.use('/api/menu', require('./routes/api/menu.route'))
 app.use(verifyJWT)
-app.use('api/home', require('./routes/api/home.route'))
-app.use('api/restaurant', require('./routes/api/restaurant.route'))
+app.use('/api/home', require('./routes/api/home.route'))
+app.use('/api/restaurant', require('./routes/api/restaurant.route'))
 app.use(errorHandler)
 
 mongoose.connection.once('open', () => {
