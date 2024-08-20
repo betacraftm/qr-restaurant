@@ -19,10 +19,7 @@ const dishSchema = new mongoose.Schema({
 		},
 	],
 	description: String,
-	imageUrl: {
-		type: String,
-		default: './images/default.png',
-	},
+	imageUrl: String,
 })
 
 module.exports = mongoose.model('Dish', dishSchema)

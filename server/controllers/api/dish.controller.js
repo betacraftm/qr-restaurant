@@ -1,6 +1,7 @@
 const { StatusCodes } = require('http-status-codes')
 const Restaurant = require('../../model/Restaurant.model')
 const Dish = require('../../model/Dish.model')
+const { dishRegex } = require('../../utils/dishRegex.utils.js')
 
 const getAllDishes = async (req, res) => {
 	try {
@@ -25,9 +26,10 @@ const getAllDishes = async (req, res) => {
 			.json({ message: error.message })
 	}
 }
+
 const createDish = async (req, res) => {
 	try {
-		const { name, price, category, description } = req.body
+		const { name, price, category, description, imageUrl } = req.body
 
 		if (!req?.params?.id)
 			return res
@@ -41,18 +43,22 @@ const createDish = async (req, res) => {
 				.status(StatusCodes.NO_CONTENT)
 				.json({ message: 'No restaurant matched ID' })
 
-		const result = await Dish.create({
-			name,
-			price,
-			category,
-			description,
-		})
-		const dishes = restaurant.dishes
-		restaurant.dishes = [...dishes, result._id]
-		await restaurant.save()
-		res
-			.status(StatusCodes.CREATED)
-			.json({ message: `New dish ${name} created` })
+		if (!dishRegex(name, price, category, res)) {
+			const result = await Dish.create({
+				name,
+				price,
+				category,
+				description,
+				imageUrl:
+					imageUrl === ''
+						? 'https://www.bbcgoodfood.com/recipes/collection/easy-recipes'
+						: imageUrl,
+			})
+			const dishes = restaurant.dishes
+			restaurant.dishes = [...dishes, result._id]
+			await restaurant.save()
+			res.status(StatusCodes.CREATED).json(result)
+		}
 	} catch (error) {
 		console.log(`Error in create dishes: ${error.message}`)
 		res
@@ -60,21 +66,28 @@ const createDish = async (req, res) => {
 			.json({ message: error.message })
 	}
 }
+
 const editDish = async (req, res) => {
 	try {
 		const { dish } = req.query
 		const foundDish = await Dish.findById(dish)
 		if (!foundDish)
 			return res
-				.status(StatusCodes.NO_CONTENT)
+				.status(StatusCodes.BAD_REQUEST)
 				.json({ message: 'No dish matched ID' })
-		if (req.body?.name) foundDish.name = req.body.name
-		if (req.body?.price) foundDish.address = req.body.price
-		if (req.body?.category) foundDish.numTable = req.body.category
-		if (req.body?.description) foundDish.description = req.body.description
-		const result = await foundDish.save()
-		console.log(result)
-		res.status(StatusCodes.OK).json(result)
+		const { name, price, category, description, imageUrl } = req.body
+		if (!dishRegex(name, price, category, description, imageUrl, res)) {
+			foundDish.name = name
+			foundDish.price = price
+			foundDish.category = category
+			foundDish.description = description
+			foundDish.imageUrl =
+				imageUrl === ''
+					? 'https://www.bbcgoodfood.com/recipes/collection/easy-recipes'
+					: imageUrl
+			const result = await foundDish.save()
+			res.status(StatusCodes.OK).json(result)
+		}
 	} catch (error) {
 		console.log(`Error in edit dishes: ${error.message}`)
 		res
