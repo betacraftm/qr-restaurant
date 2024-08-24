@@ -22,19 +22,19 @@ export default function Header() {
         </div>
         <div className="navbar-center hidden md:flex">
           <ul className="menu menu-horizontal px-1">
-            <li>
+            <li className="font-semibold">
               <a>About</a>
             </li>
-            <li>
+            <li className="font-semibold">
               <a>How To Use</a>
             </li>
-            <li>
+            <li className="font-semibold">
               <a>Features</a>
             </li>
           </ul>
         </div>
         <div className="navbar-end">
-          <div className="btn hidden md:inline-flex">
+          <div className="btn hidden bg-red-500 text-white hover:bg-red-600 md:inline-flex">
             <Link to={"/sign-in"}>Sign In</Link>
           </div>
           <span
