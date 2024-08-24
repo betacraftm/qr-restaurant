@@ -48,24 +48,27 @@ export default function Header() {
       <div className={showMenu ? "block" : "hidden"}>
         <ul className="menu w-full rounded-none bg-base-200 p-0 shadow-md">
           <li
-            className="rounded-none border-b border-slate-300"
+            className="rounded-none border-b border-slate-300 font-semibold"
             onClick={() => setShowMenu((prev) => !prev)}
           >
             <a>About</a>
           </li>
           <li
-            className="rounded-none border-b border-slate-300"
+            className="rounded-none border-b border-slate-300 font-semibold"
             onClick={() => setShowMenu((prev) => !prev)}
           >
             <a>How To Use</a>
           </li>
           <li
-            className="rounded-none border-b border-slate-300"
+            className="rounded-none border-b border-slate-300 font-semibold"
             onClick={() => setShowMenu((prev) => !prev)}
           >
             <a>Features</a>
           </li>
-          <li onClick={() => setShowMenu((prev) => !prev)}>
+          <li
+            onClick={() => setShowMenu((prev) => !prev)}
+            className="font-semibold"
+          >
             <Link to={"/sign-in"}>Sign In</Link>
           </li>
         </ul>
